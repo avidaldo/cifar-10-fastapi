@@ -8,27 +8,33 @@ This project demonstrates how to deploy a machine learning model (specifically a
 
 ## Project Structure
 
-The project has a simplified structure but keeps the models in a separate directory:
+The project follows a clean, simple structure for educational purposes:
 
 ```
 ├── main.py               # Main application file with API endpoints
-├── app
-│   ├── models            # Model definitions and weights
-│   │   ├── cnn_model.py  # CNN model architecture
-│   │   └── cifar_net.pth # Pre-trained model weights
-│   ├── templates         # HTML templates
-│   │   └── form.html     # Upload form template
-│   └── static            # Static files (if any)
-├── cifar_net.pth         # Pre-trained model copy in root (fallback)
+├── models/               # Model definitions and weights
+│   ├── cnn_model.py      # CNN model architecture
+│   └── cifar_net.pth     # Pre-trained model weights
+├── templates/            # HTML templates
+│   └── form.html         # Upload form template
+├── static/               # Static files
+│   ├── css/
+│   │   └── style.css     # CSS styles
+│   └── js/
+│       └── script.js     # JavaScript for image preview
+├── utils/                # Utility functions
+│   ├── image_utils.py    # Image processing utilities
+│   └── model_utils.py    # Model loading and prediction utilities
 └── requirements.txt      # Project dependencies
 ```
 
 ## Features
 
 - Simple web interface for uploading images
+- Image preview before submission
 - Image classification into one of the CIFAR-10 categories:
   - airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck
-- Real-time prediction with confidence score
+- Server-side rendering of results with confidence score
 
 ## Key Components
 
@@ -43,7 +49,7 @@ The project has a simplified structure but keeps the models in a separate direct
 2. The image is preprocessed (resized to 32x32, normalized, etc.)
 3. The preprocessed image is fed into the CNN model
 4. The model predicts the most likely class
-5. The prediction and confidence score are returned to the user
+5. The prediction and confidence score are shown on the same page
 
 ## Getting Started
 
@@ -83,19 +89,30 @@ The application will start and be available at http://localhost:8000
 
 ## Understanding the Code
 
-### `main.py`
-Contains the FastAPI application, image processing functions, and API endpoints.
+### Separation of Concerns
 
-### `app/models/cnn_model.py`
-Contains the CNN architecture definition used for classification.
+The project follows good software engineering practices with a clean separation of concerns:
 
-This simplified structure maintains code organization while being easy to understand for beginners.
+- **HTML (templates/form.html)**: Structure of the web interface
+- **CSS (static/css/style.css)**: Styling of the web interface
+- **JavaScript (static/js/script.js)**: Client-side interactivity (image preview)
+- **Python (main.py)**: Application logic and API endpoints
+- **Python (utils/)**: Reusable utility functions
+- **Python (models/)**: Model definition and weights
+
+### Implementation Details
+
+- **main.py**: Sets up FastAPI application, routes, and serves the web interface.
+- **utils/image_utils.py**: Contains functions for processing images for the model.
+- **utils/model_utils.py**: Handles model loading and prediction functions.
+- **models/cnn_model.py**: Defines the CNN architecture used for classification.
 
 ## For ML Students
 
 If you're studying machine learning and want to understand how to deploy your models:
 
-1. **Model Definition**: See how the model is defined in `app/models/cnn_model.py`
-2. **Model Loading**: See how the model is loaded in `main.py`
-3. **Prediction Pipeline**: See how images are processed and fed into the model
-4. **Web Integration**: Learn how to create a simple web interface for your ML models
+1. **Model Definition**: See how the model is defined in `models/cnn_model.py`
+2. **Model Loading**: See how the model is loaded in `utils/model_utils.py`
+3. **Prediction Pipeline**: See how images are processed in `utils/image_utils.py`
+4. **Web Integration**: Learn how HTML, CSS, and JS work together for a simple interface
+5. **API Development**: Understand how FastAPI makes it easy to create web endpoints

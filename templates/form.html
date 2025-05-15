@@ -2,71 +2,14 @@
 <html>
 <head>
     <title>CIFAR-10 Image Classifier</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        form {
-            background-color: #f5f5f5;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #result {
-            display: none;
-            background-color: #f5f5f5;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .result-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .result-item {
-            margin-bottom: 5px;
-        }
-        .image-preview {
-            max-width: 100%;
-            max-height: 200px;
-            margin-top: 10px;
-            border-radius: 4px;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <h1>CIFAR-10 Image Classifier</h1>
     <p>Upload an image to classify it into one of the 10 CIFAR-10 classes: airplane, automobile, bird, cat, deer, dog, frog, horse, ship, or truck.</p>
     
+    <!--  Form to upload an image -->
+
     <form id="upload-form" action="/predict/" enctype="multipart/form-data" method="post">
         <div class="form-group">
             <label for="file">Upload an image:</label>
@@ -79,40 +22,17 @@
         <button type="submit">Classify Image</button>
     </form>
 
-    <div id="result">
+    <!--  Result of the classification -->
+
+    {% if result %} <!-- If the result is not empty (the user has uploaded an image and clicked the button)-->
+    <div class="result">
         <div class="result-title">Classification Result:</div>
-        <div class="result-item">File: <span id="filename"></span></div>
-        <div class="result-item">Prediction: <span id="prediction"></span></div>
-        <div class="result-item">Confidence: <span id="confidence"></span>%</div>
+        <div class="result-item">File: {{ result.filename }}</div>
+        <div class="result-item">Prediction: {{ result.prediction }}</div>
+        <div class="result-item">Confidence: {{ result.confidence }}%</div>
     </div>
+    {% endif %}
 
-    <script>
-        // Function to preview the selected image
-        function previewImage(event) {
-            const preview = document.getElementById('image-preview');
-            const previewContainer = document.getElementById('preview-container');
-            preview.src = URL.createObjectURL(event.target.files[0]);
-            previewContainer.style.display = 'block';
-        }
-
-        // Handle form submission
-        document.getElementById('upload-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const response = await fetch('/predict/', {
-                method: 'POST',
-                body: formData
-            });
-            
-            const result = await response.json();
-            
-            // Display the results
-            document.getElementById('filename').textContent = result.filename;
-            document.getElementById('prediction').textContent = result.prediction;
-            document.getElementById('confidence').textContent = result.confidence;
-            document.getElementById('result').style.display = 'block';
-        });
-    </script>
+    <script src="/static/js/script.js"></script>
 </body>
 </html> 

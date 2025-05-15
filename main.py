@@ -1,6 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 import os
 import uvicorn
 
@@ -17,6 +18,9 @@ app = FastAPI(
 
 # Set up templates
 templates = Jinja2Templates(directory="templates")
+
+# Mount static files directory
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Load the model at startup
 MODEL_PATH = os.path.join("models", "cifar_net.pth")
@@ -37,7 +41,7 @@ async def get_form(request: Request):
 
 
 @app.post("/predict/")
-async def predict(file: UploadFile = File(...)):
+async def predict(request: Request, file: UploadFile = File(...)):
     """Process an uploaded image and return the prediction"""
     # Read the file contents
     contents = await file.read()
@@ -51,7 +55,8 @@ async def predict(file: UploadFile = File(...)):
     # Add filename to result
     result["filename"] = file.filename
     
-    return result
+    # Return the template with the result
+    return templates.TemplateResponse("form.html", {"request": request, "result": result})
 
 if __name__ == "__main__":
     # Start the FastAPI application
