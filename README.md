@@ -106,3 +106,7 @@ The project follows good software engineering practices with a clean separation 
 - **utils/image_utils.py**: Contains functions for processing images for the model.
 - **utils/model_utils.py**: Handles model loading and prediction functions.
 - **models/cnn_model.py**: Defines the CNN architecture used for classification.
+
+### URL of a deployment in the cloud to test the application
+
+https://cifar-10-fastapi.onrender.com/
