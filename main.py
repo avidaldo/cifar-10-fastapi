@@ -4,6 +4,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
 import uvicorn
+import shutil
+import uuid
 
 # Import the model and utils
 from utils.image_utils import process_image
@@ -21,6 +23,9 @@ templates = Jinja2Templates(directory="templates")
 
 # Mount static files directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Create uploads directory if it doesn't exist
+os.makedirs("static/uploads", exist_ok=True)
 
 # Load the model at startup
 MODEL_PATH = os.path.join("models", "cifar_net.pth")
@@ -43,20 +48,33 @@ async def get_form(request: Request):
 @app.post("/predict/")
 async def predict(request: Request, file: UploadFile = File(...)):
     """Process an uploaded image and return the prediction"""
-    # Read the file contents
-    contents = await file.read()
+    # Create a unique filename for the uploaded image
+    file_extension = file.filename.split(".")[-1]
+    unique_filename = f"{uuid.uuid4()}.{file_extension}"
+    file_path = os.path.join("static", "uploads", unique_filename)
     
-    # Process the image
-    image_tensor = process_image(contents)
+    # Save the uploaded file
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    # Process the image for prediction
+    image_tensor = process_image(file_path)
     
     # Make prediction
     result = predict_image(model, image_tensor)
     
-    # Add filename to result
+    # Add filename and image path to result
     result["filename"] = file.filename
     
-    # Return the template with the result
-    return templates.TemplateResponse("form.html", {"request": request, "result": result})
+    # Return the template with the result and image path
+    return templates.TemplateResponse(
+        "form.html", 
+        {
+            "request": request, 
+            "result": result,
+            "image_path": f"/static/uploads/{unique_filename}"
+        }
+    )
 
 if __name__ == "__main__":
     # Start the FastAPI application

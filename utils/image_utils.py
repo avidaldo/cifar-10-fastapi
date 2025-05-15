@@ -1,6 +1,7 @@
 import torchvision.transforms as transforms
 from PIL import Image
 import io
+import os
 
 def _get_transform():
     """
@@ -21,18 +22,25 @@ def _get_transform():
         )
     ])
 
-def process_image(image_bytes):
+def process_image(image_input):
     """
-    Process an image from bytes to a normalized tensor ready for prediction.
+    Process an image from bytes or file path to a normalized tensor ready for prediction.
     
     Args:
-        image_bytes (bytes): Raw image data
+        image_input (bytes or str): Raw image data or path to image file
         
     Returns:
         torch.Tensor: Processed image tensor with batch dimension added
     """
-    # Convert bytes to PIL Image
-    image = Image.open(io.BytesIO(image_bytes))
+    # Handle different input types
+    if isinstance(image_input, bytes):
+        # Input is bytes
+        image = Image.open(io.BytesIO(image_input))
+    elif isinstance(image_input, str) and os.path.isfile(image_input):
+        # Input is a file path
+        image = Image.open(image_input)
+    else:
+        raise ValueError("Input must be image bytes or valid file path")
     
     # Apply transformations
     transform = _get_transform()
