@@ -9,7 +9,7 @@
     <p>Upload an image to classify it into one of the 10 CIFAR-10 classes: airplane, automobile, bird, cat, deer, dog, frog, horse, ship, or truck.</p>
     
     <!--  Form to upload an image -->
-
+    {% if not result %}
     <form id="upload-form" action="/predict/" enctype="multipart/form-data" method="post">
         <div class="form-group">
             <label for="file">Upload an image:</label>
@@ -21,15 +21,27 @@
         </div>
         <button type="submit">Classify Image</button>
     </form>
+    {% endif %}
 
     <!--  Result of the classification -->
-
-    {% if result %} <!-- If the result is not empty (the user has uploaded an image and clicked the button)-->
-    <div class="result">
-        <div class="result-title">Classification Result:</div>
-        <div class="result-item">File: {{ result.filename }}</div>
-        <div class="result-item">Prediction: {{ result.prediction }}</div>
-        <div class="result-item">Confidence: {{ result.confidence }}%</div>
+    {% if result %}
+    <div class="result-container">
+        <div class="result-image">
+            <h3>Uploaded Image</h3>
+            <img src="{{ image_path }}" class="result-uploaded-image">
+            <div class="image-info">
+                <p>Filename: {{ result.filename }}</p>
+                <form action="/" method="get">
+                    <button type="submit" class="back-button">Try Another Image</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="result">
+            <div class="result-title">Classification Result:</div>
+            <div class="result-item prediction">Prediction: <span class="prediction-value">{{ result.prediction }}</span></div>
+            <div class="result-item">Confidence: {{ result.confidence }}%</div>
+        </div>
     </div>
     {% endif %}
 
