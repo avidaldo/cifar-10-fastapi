@@ -12,17 +12,7 @@ jobs:
         with:
           fetch-depth: 0
       
-      # We use a community action to push a specific subdirectory to HuggingFace
       - name: Push to Hugging Face Hub
-        uses: cpina/github-action-push-to-another-repository@master
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        with:
-          source-directory: '.'
-          destination-github-username: 'avidaldo'
-          destination-repository-name: 'cifar-10-fastapi'
-          target-branch: main
-          target-directory: ''
-          create-target-branch-if-needed: true
-          # The destination URL for HuggingFace Spaces uses the token for auth
-          destination-repository-url: https://avidaldo:${{ env.HF_TOKEN }}@huggingface.co/spaces/avidaldo/cifar-10-fastapi
+        run: git push --force https://avidaldo:$HF_TOKEN@huggingface.co/spaces/avidaldo/cifar-10-fastapi HEAD:main
