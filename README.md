@@ -6,6 +6,7 @@ colorTo: indigo
 sdk: docker
 pinned: false
 ---
+
 # CIFAR-10 Image Classifier API
 
 A simple FastAPI application for classifying images into CIFAR-10 categories using a PyTorch CNN model.
@@ -117,4 +118,4 @@ The project follows good software engineering practices with a clean separation 
 
 ### URL of a deployment in the cloud to test the application
 
-https://cifar-10-fastapi.onrender.com/
+https://huggingface.co/spaces/avidaldo/cifar-10-fastapi
