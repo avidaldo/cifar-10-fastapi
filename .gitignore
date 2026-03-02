@@ -32,9 +32,10 @@ ENV/
 *.swp
 *.swo
 
-# Model checkpoints and data (optionally)
-# models/*.pth
-# Uncomment if you don't want to track model files
+# Model checkpoints and data
+*.pth
+models/*.pth
+# Uncommented directly by refactoring
 
 # Jupyter Notebook
 .ipynb_checkpoints

@@ -6,6 +6,7 @@ import os
 import uvicorn
 import shutil
 import uuid
+from huggingface_hub import hf_hub_download
 
 # Import the model and utils
 from utils.image_utils import process_image
@@ -28,7 +29,14 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 os.makedirs("static/uploads", exist_ok=True)
 
 # Load the model at startup
-MODEL_PATH = os.path.join("models", "cifar_net.pth")
+# Dynamically download the model weights from the Hugging Face Model Hub
+try:
+    # Attempt to download from HF Hub
+    MODEL_PATH = hf_hub_download(repo_id="avidaldo/cifar-10-weights", filename="cifar_net.pth")
+except Exception:
+    # Fallback to local models directory for local development before weights are uploaded
+    MODEL_PATH = os.path.join("models", "cifar_net.pth")
+
 model = load_model(MODEL_PATH)
 
 
