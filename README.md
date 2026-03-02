@@ -1,3 +1,11 @@
+---
+title: CIFAR-10 FastAPI Classifier
+emoji: 🖼️
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+---
 # CIFAR-10 Image Classifier API
 
 A simple FastAPI application for classifying images into CIFAR-10 categories using a PyTorch CNN model.
